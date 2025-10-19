@@ -21,6 +21,11 @@
             "semicolons": "always"
         }
     },
+    "css": {
+        "linter": {
+            "enabled": true
+        }
+    },
     "linter": {
         "enabled": true,
         "rules": {
