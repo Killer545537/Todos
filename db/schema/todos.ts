@@ -7,7 +7,6 @@ import {
     uuid,
 } from 'drizzle-orm/pg-core';
 import { user } from '@/db/schema/auth-schema';
-import { relations } from 'drizzle-orm';
 
 export const statusEnum = pgEnum('status', [
     'pending',
