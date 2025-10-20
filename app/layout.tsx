@@ -16,6 +16,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
     title: 'Todo App',
     description: 'Made by Srijan Mahajan to do something productive',
+    icons: {
+        icon: '/icon.svg',
+    },
 };
 
 export default function RootLayout({
