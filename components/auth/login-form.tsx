@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { signUpUser } from '@/actions/user';
+import { loginUser } from '@/actions/user';
 import { Input } from '@/components/ui/input';
 import { authClient } from '@/lib/auth-client';
 import { Button } from '../ui/button';
@@ -18,69 +18,42 @@ import {
     FieldSeparator,
 } from '../ui/field';
 
-const formSchema = z
-    .object({
-        name: z
-            .string()
-            .min(2, {
-                message: 'Username should be at least 2 characters long',
-            })
-            .max(50, {
-                message: 'Username should be at most 50 characters long',
-            }),
-        email: z.email({ message: 'Invalid email address' }),
-        password: z
-            .string()
-            .min(6, {
-                message: 'Password should be at least 6 characters long',
-            })
-            .max(100, {
-                message: 'Password should be at most 100 characters long',
-            }),
-        confirmPassword: z.string(),
-    })
-    .refine(
-        (data) => {
-            if (!data.confirmPassword) return true;
-            return data.password === data.confirmPassword;
-        },
-        {
-            message: "Passwords don't match",
-            path: ['confirmPassword'],
-        },
-    )
-    .refine((data) => data.confirmPassword.length > 0, {
-        message: 'Please confirm your password',
-        path: ['confirmPassword'],
-    });
+const formSchema = z.object({
+    email: z.email({ message: 'Invalid email address' }),
+    password: z
+        .string()
+        .min(6, {
+            message: 'Password should be at least 6 characters long',
+        })
+        .max(100, {
+            message: 'Password should be at most 100 characters long',
+        }),
+});
 
-const signUpGoogle = async () => {
+const loginGoogle = async () => {
     await authClient.signIn.social({
         provider: 'google',
         callbackURL: '/todos',
     });
 };
 
-const SignUpForm = () => {
+const LoginForm = () => {
     const router = useRouter();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: 'onChange',
         defaultValues: {
-            name: '',
             email: '',
             password: '',
-            confirmPassword: '',
         },
     });
 
     const onSubmit = async ({
-        name,
         email,
         password,
     }: z.infer<typeof formSchema>) => {
         try {
-            const result = await signUpUser(name, email, password);
+            const result = await loginUser(email, password);
             if (result.success) {
                 toast.success(result.message);
                 router.push('/todos');
@@ -88,7 +61,7 @@ const SignUpForm = () => {
                 toast.error(result.message);
             }
         } catch (error) {
-            toast.error((error as Error)?.message || 'Failed to sign up');
+            toast.error((error as Error)?.message || 'Failed to login');
         }
     };
 
@@ -97,37 +70,15 @@ const SignUpForm = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FieldGroup>
                     <div className="flex flex-col items-center gap-2 text-center">
-                        <h1 className="text-2xl font-bold">
-                            Welcome to Todos!
-                        </h1>
+                        <h1 className="text-2xl font-bold">Welcome Back!</h1>
                         <FieldDescription>
-                            Already have an account?{' '}
-                            <Link href="/login" className="underline">
-                                Login
+                            Don't have an account?{' '}
+                            <Link href="/sign-up" className="underline">
+                                Sign up
                             </Link>
                         </FieldDescription>
                     </div>
                 </FieldGroup>
-                <Field>
-                    <Controller
-                        name="name"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>Name</FieldLabel>
-                                <Input
-                                    {...field}
-                                    placeholder="Enter your name"
-                                />
-                                {fieldState.error && (
-                                    <FieldDescription className="text-red-500">
-                                        {fieldState.error.message}
-                                    </FieldDescription>
-                                )}
-                            </Field>
-                        )}
-                    />
-                </Field>
                 <Field>
                     <Controller
                         name="email"
@@ -171,29 +122,8 @@ const SignUpForm = () => {
                     />
                 </Field>
                 <Field>
-                    <Controller
-                        name="confirmPassword"
-                        control={form.control}
-                        render={({ field, fieldState }) => (
-                            <Field data-invalid={fieldState.invalid}>
-                                <FieldLabel>Confirm Password</FieldLabel>
-                                <Input
-                                    {...field}
-                                    type="password"
-                                    placeholder="Confirm your password"
-                                />
-                                {fieldState.error && (
-                                    <FieldDescription className="text-red-500">
-                                        {fieldState.error.message}
-                                    </FieldDescription>
-                                )}
-                            </Field>
-                        )}
-                    />
-                </Field>
-                <Field>
                     <Button type="submit" className="w-full">
-                        Create Account
+                        Login
                     </Button>
                 </Field>
                 <FieldSeparator>Or</FieldSeparator>
@@ -201,7 +131,7 @@ const SignUpForm = () => {
                     <Button
                         variant="outline"
                         type="button"
-                        onClick={signUpGoogle}
+                        onClick={loginGoogle}
                         className="w-full"
                     >
                         <svg
@@ -225,4 +155,4 @@ const SignUpForm = () => {
     );
 };
 
-export default SignUpForm;
+export default LoginForm;
