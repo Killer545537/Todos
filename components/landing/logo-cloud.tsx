@@ -1,5 +1,6 @@
 import { InfiniteSlider } from '@/components/motion-primitives/infinite-slider';
 import { ProgressiveBlur } from '@/components/motion-primitives/progressive-blur';
+import Image from 'next/image';
 
 export const LogoCloud = () => {
     return (
@@ -12,48 +13,53 @@ export const LogoCloud = () => {
                     <div className="relative py-6 md:w-[calc(100%-11rem)]">
                         <InfiniteSlider speedOnHover={20} speed={40} gap={112}>
                             <div className="flex">
-                                <img
+                                <Image
                                     className="mx-auto h-5 w-fit dark:invert"
                                     src="https://html.tailus.io/blocks/customers/nvidia.svg"
                                     alt="Nvidia Logo"
-                                    height="20"
-                                    width="auto"
+                                    height={0}
+                                    width={0}
+                                    style={{ height: 20, width: 'auto' }}
                                 />
                             </div>
                             <div className="flex">
-                                <img
-                                    className="mx-auto h-4 w-fit dark:invert"
+                                <Image
+                                    className="mx-auto w-fit dark:invert"
                                     src="https://html.tailus.io/blocks/customers/github.svg"
                                     alt="GitHub Logo"
-                                    height="16"
-                                    width="auto"
+                                    height={0}
+                                    width={0}
+                                    style={{ height: 20, width: 'auto' }}
                                 />
                             </div>
                             <div className="flex">
-                                <img
-                                    className="mx-auto h-5 w-fit dark:invert"
+                                <Image
+                                    className="mx-auto w-fit dark:invert"
                                     src="https://html.tailus.io/blocks/customers/nike.svg"
                                     alt="Nike Logo"
-                                    height="20"
-                                    width="auto"
+                                    height={0}
+                                    width={0}
+                                    style={{ height: 20, width: 'auto' }}
                                 />
                             </div>
                             <div className="flex">
-                                <img
-                                    className="mx-auto h-4 w-fit dark:invert"
+                                <Image
+                                    className="mx-auto w-fit dark:invert"
                                     src="https://html.tailus.io/blocks/customers/laravel.svg"
                                     alt="Laravel Logo"
-                                    height="16"
-                                    width="auto"
+                                    height={0}
+                                    width={0}
+                                    style={{ height: 20, width: 'auto' }}
                                 />
                             </div>
                             <div className="flex">
-                                <img
-                                    className="mx-auto h-6 w-fit dark:invert"
+                                <Image
+                                    className="mx-auto w-fit dark:invert"
                                     src="https://html.tailus.io/blocks/customers/openai.svg"
                                     alt="OpenAI Logo"
-                                    height="24"
-                                    width="auto"
+                                    height={0}
+                                    width={0}
+                                    style={{ height: 20, width: 'auto' }}
                                 />
                             </div>
                         </InfiniteSlider>
