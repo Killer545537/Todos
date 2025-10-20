@@ -34,7 +34,9 @@
                 "useArrowFunction": "error"
             },
             "suspicious": {
-                "noUnknownAtRules": "off"
+                "noUnknownAtRules": "off",
+                "noImplicitAnyLet": "off",
+                "noArrayIndexKey": "off"
             }
         },
         "domains": {

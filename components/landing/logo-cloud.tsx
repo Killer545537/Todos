@@ -1,6 +1,6 @@
+import Image from 'next/image';
 import { InfiniteSlider } from '@/components/motion-primitives/infinite-slider';
 import { ProgressiveBlur } from '@/components/motion-primitives/progressive-blur';
-import Image from 'next/image';
 
 export const LogoCloud = () => {
     return (

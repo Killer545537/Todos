@@ -1,8 +1,8 @@
-import { TextEffect } from '@/components/ui/text-effect';
-import { AnimatedGroup } from '@/components/ui/animated-group';
+import Image from 'next/image';
 import { HeroHeader } from '@/components/landing/header';
 import { LogoCloud } from '@/components/landing/logo-cloud';
-import Image from 'next/image';
+import { AnimatedGroup } from '@/components/ui/animated-group';
+import { TextEffect } from '@/components/ui/text-effect';
 
 const transitionVariants = {
     container: {

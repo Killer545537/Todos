@@ -1,9 +1,9 @@
 'use client';
-import Link from 'next/link';
-import { Logo } from '@/components/landing/logo';
 import { Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import React from 'react';
+import { Logo } from '@/components/landing/logo';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 export const HeroHeader = () => {
@@ -41,9 +41,10 @@ export const HeroHeader = () => {
                             </Link>
 
                             <button
+                                type="button"
                                 onClick={() => setMenuState(!menuState)}
                                 aria-label={
-                                    menuState == true
+                                    menuState === true
                                         ? 'Close Menu'
                                         : 'Open Menu'
                                 }
