@@ -1,10 +1,10 @@
 import { account, session, user, verification } from '@/db/schema/auth-schema';
-import { tags, todos, todoTags } from '@/db/schema/todos';
 import {
     tagsRelations,
     todosRelations,
     userRelations,
 } from '@/db/schema/relations';
+import { tags, todos, todoTags } from '@/db/schema/todos';
 
 export const schema = {
     account,

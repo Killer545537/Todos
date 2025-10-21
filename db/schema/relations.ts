@@ -16,3 +16,8 @@ export const tagsRelations = relations(tags, ({ one, many }) => ({
     user: one(user, { fields: [tags.userId], references: [user.id] }),
     todoTags: many(todoTags),
 }));
+
+export const todoTagsRelations = relations(todoTags, ({ one }) => ({
+    todo: one(todos, { fields: [todoTags.todoId], references: [todos.id] }),
+    tag: one(tags, { fields: [todoTags.tagId], references: [tags.id] }),
+}));
