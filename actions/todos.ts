@@ -7,18 +7,7 @@ import { db } from '@/db/db';
 import { tags, todos, todoTags } from '@/db/schema/todos';
 import { auth } from '@/lib/auth';
 import type { InsertTodo } from '@/types/todos';
-
-const getId = async () => {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
-
-    if (!session?.user) {
-        return null;
-    }
-
-    return session.user.id;
-};
+import { getId } from '@/helpers/auth';
 
 type NewTodo = Omit<InsertTodo, 'userId'> & {
     tags?: string[];
