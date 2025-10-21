@@ -1,13 +1,11 @@
 'use server';
 
 import { and, eq } from 'drizzle-orm';
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { db } from '@/db/db';
 import { tags, todos, todoTags } from '@/db/schema/todos';
-import { auth } from '@/lib/auth';
-import type { InsertTodo } from '@/types/todos';
 import { getId } from '@/helpers/auth';
+import type { InsertTodo } from '@/types/todos';
 
 type NewTodo = Omit<InsertTodo, 'userId'> & {
     tags?: string[];
