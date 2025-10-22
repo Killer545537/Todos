@@ -1,12 +1,18 @@
-import type { tags, todos, statusEnum, priorityEnum } from '@/db/schema/todos';
+import { tags, todos, statusEnum, priorityEnum } from '@/db/schema/todos';
 
 export type Todo = Omit<
     typeof todos.$inferSelect,
     'userId' | 'id' | 'createdAt' | 'updatedAt'
 >;
 
-export type Tags = Array<Omit<typeof tags.$inferSelect, 'userId' | 'id'>>;
+type Tag = Omit<typeof tags.$inferSelect, 'userId' | 'id'>;
 
-export type Status = (typeof statusEnum.enumValues)[number];
+export type Tags = Array<Tag>;
 
-export type Priority = (typeof priorityEnum.enumValues)[number];
+export const STATUS_VALUES = statusEnum.enumValues;
+
+export type Status = (typeof STATUS_VALUES)[number];
+
+export const PRIORITY_VALUES = priorityEnum.enumValues;
+
+export type Priority = (typeof PRIORITY_VALUES)[number];
