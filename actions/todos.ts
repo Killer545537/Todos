@@ -5,9 +5,9 @@ import { redirect } from 'next/navigation';
 import { db } from '@/db/db';
 import { tags, todos, todoTags } from '@/db/schema/todos';
 import { getId } from '@/helpers/auth';
-import type { InsertTodo } from '@/types/todos';
+import type { Todo } from '@/types/todos';
 
-type NewTodo = Omit<InsertTodo, 'userId'> & {
+type NewTodo = Todo & {
     tags?: string[];
 };
 
