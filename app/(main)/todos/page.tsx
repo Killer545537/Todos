@@ -1,12 +1,23 @@
-import TodosContainer from './todos-container';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Todos',
+    description: 'Add and manage your todos',
+};
 
 const TodosPage = () => {
     return (
-        <div className="p-6">
-            <h1 className="text-3xl font-bold mb-4">Todos</h1>
-            <p className="text-muted-foreground">Manage your todo tags here.</p>
-            <TodosContainer />
-        </div>
+        <main className="flex-1 p-8 overflow-auto">
+            <div className="max-w-6xl mx-auto space-y-6">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold text-foreground">
+                            All Tasks
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </main>
     );
 };
 
