@@ -1,4 +1,9 @@
-import { tags, todos, statusEnum, priorityEnum } from '@/db/schema/todos';
+import {
+    priorityEnum,
+    statusEnum,
+    type tags,
+    type todos,
+} from '@/db/schema/todos';
 
 export type Todo = Omit<
     typeof todos.$inferSelect,

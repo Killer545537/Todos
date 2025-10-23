@@ -15,6 +15,5 @@ export const proxy = async (request: NextRequest) => {
 };
 
 export const config = {
-    runtime: 'nodejs',
     matcher: ['/todos'], // Apply middleware to specific routes
 };

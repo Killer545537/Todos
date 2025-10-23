@@ -1,10 +1,10 @@
 'use client';
 
-import { STATUS_VALUES, type Tags, type Todo } from '@/types/todos';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { FieldGroup, FieldLabel } from '@/components/ui/field';
+import { STATUS_VALUES, type Tags, type Todo } from '@/types/todos';
 
 type TodoFormProps = {
     todo?: Todo & { tags?: Tags };
