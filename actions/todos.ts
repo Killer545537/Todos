@@ -1,11 +1,11 @@
 'use server';
 
-import { and, eq, desc } from 'drizzle-orm';
+import { and, desc, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { db } from '@/db/db';
 import { tags, todos, todoTags } from '@/db/schema/todos';
 import { getId } from '@/helpers/auth';
-import type { Todo, Tags } from '@/types/todos';
+import type { Todo, TodoWithTags } from '@/types/todos';
 
 type NewTodo = Todo & {
     tags?: string[];
@@ -82,7 +82,7 @@ export const createTodo = async ({
 /**
  * Get all todos for the current user with their tags.
  */
-export const getTodos = async () => {
+export const getTodos = async (): Promise<TodoWithTags[]> => {
     const id = await getId();
     if (!id) {
         redirect('/login');

@@ -10,7 +10,7 @@ export type Todo = Omit<
     'userId' | 'id' | 'createdAt' | 'updatedAt'
 >;
 
-type Tag = Omit<typeof tags.$inferSelect, 'userId' | 'id'>;
+export type Tag = Omit<typeof tags.$inferSelect, 'userId' | 'id'>;
 
 export type Tags = Array<Tag>;
 
@@ -21,3 +21,5 @@ export type Status = (typeof STATUS_VALUES)[number];
 export const PRIORITY_VALUES = priorityEnum.enumValues;
 
 export type Priority = (typeof PRIORITY_VALUES)[number];
+
+export type TodoWithTags = Todo & { tags?: Tags };

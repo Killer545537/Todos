@@ -4,7 +4,7 @@ import TodoForm from '@/components/todos/todo-form';
 
 const TodosContainer = () => {
     return (
-        <div className="flex">
+        <div className='flex'>
             <TodoForm
                 todo={undefined}
                 onSubmit={(data) => {

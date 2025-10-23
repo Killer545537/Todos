@@ -15,13 +15,13 @@ const Sidebar = () => {
     const pathname = usePathname();
 
     return (
-        <aside className="w-64 border-r border-border bg-card h-screen sticky top-0 flex flex-col">
-            <div className="p-6 border-b border-border">
-                <h1 className="text-2xl font-bold text-foreground">Todos</h1>
+        <aside className='w-64 border-r border-border bg-card h-screen sticky top-0 flex flex-col'>
+            <div className='p-6 border-b border-border'>
+                <h1 className='text-2xl font-bold text-foreground'>Todos</h1>
                 <p>Manage your Todos</p>
             </div>
 
-            <nav className="flex-1 p-4 space-y-2">
+            <nav className='flex-1 p-4 space-y-2'>
                 {links.map(({ href, label, icon: Icon }) => {
                     const isActive = pathname === href;
 
@@ -38,7 +38,7 @@ const Sidebar = () => {
                                     : 'text-foreground hover:bg-muted',
                             )}
                         >
-                            <Icon className="w-5 h-5" />
+                            <Icon className='w-5 h-5' />
                             <span>{label}</span>
                         </Link>
                     );

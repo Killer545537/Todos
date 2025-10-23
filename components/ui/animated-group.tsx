@@ -113,8 +113,8 @@ function AnimatedGroup({
 
     return (
         <motion.div
-            initial="hidden"
-            animate="visible"
+            initial='hidden'
+            animate='visible'
             variants={containerVariants}
             className={className}
             {...props}

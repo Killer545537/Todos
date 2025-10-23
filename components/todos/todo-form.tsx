@@ -1,29 +1,28 @@
 'use client';
 
-import {
-    STATUS_VALUES,
-    PRIORITY_VALUES,
-    type Tags,
-    type Todo,
-} from '@/types/todos';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Plus } from 'lucide-react';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
+import { Button } from '@/components/ui/button';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 import {
     Dialog,
     DialogContent,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Plus } from 'lucide-react';
-import { useState } from 'react';
-import { DateTimePicker } from '@/components/ui/date-time-picker';
+import {
+    PRIORITY_VALUES,
+    STATUS_VALUES,
+    type TodoWithTags,
+} from '@/types/todos';
 
 type TodoFormProps = {
-    todo?: Todo & { tags?: Tags };
+    todo?: TodoWithTags;
     onSubmit: (data: z.infer<typeof formSchema>) => void;
 };
 
@@ -93,31 +92,31 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="gap-2">
-                    <Plus className="w-4 h-4" /> Add Task
+                <Button className='gap-2'>
+                    <Plus className='w-4 h-4' /> Add Task
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
                 <DialogTitle>{todo ? 'Edit Task' : 'Add New Task'}</DialogTitle>
-                <div className="flex flex-col gap-6">
+                <div className='flex flex-col gap-6'>
                     <form
                         onSubmit={form.handleSubmit(handleFormSubmit)}
-                        className="space-y-4"
+                        className='space-y-4'
                     >
                         {/* Title Field */}
                         <Controller
-                            name="title"
+                            name='title'
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel>Title *</FieldLabel>
                                     <Input
                                         {...field}
-                                        type="text"
-                                        placeholder="Enter todo title"
+                                        type='text'
+                                        placeholder='Enter todo title'
                                     />
                                     {fieldState.error && (
-                                        <FieldDescription className="text-red-500">
+                                        <FieldDescription className='text-red-500'>
                                             {fieldState.error.message}
                                         </FieldDescription>
                                     )}
@@ -127,19 +126,19 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
 
                         {/* Description Field */}
                         <Controller
-                            name="description"
+                            name='description'
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel>Description</FieldLabel>
                                     <textarea
                                         {...field}
-                                        placeholder="Enter todo description"
+                                        placeholder='Enter todo description'
                                         rows={4}
-                                        className="w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                        className='w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive'
                                     />
                                     {fieldState.error && (
-                                        <FieldDescription className="text-red-500">
+                                        <FieldDescription className='text-red-500'>
                                             {fieldState.error.message}
                                         </FieldDescription>
                                     )}
@@ -147,17 +146,17 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
                             )}
                         />
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className='grid grid-cols-2 gap-4'>
                             {/* Status Field */}
                             <Controller
-                                name="status"
+                                name='status'
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel>Status</FieldLabel>
                                         <select
                                             {...field}
-                                            className="w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                                            className='w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm'
                                         >
                                             {STATUS_VALUES.map((status) => (
                                                 <option
@@ -175,7 +174,7 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
                                             ))}
                                         </select>
                                         {fieldState.error && (
-                                            <FieldDescription className="text-red-500">
+                                            <FieldDescription className='text-red-500'>
                                                 {fieldState.error.message}
                                             </FieldDescription>
                                         )}
@@ -185,14 +184,14 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
 
                             {/* Priority Field */}
                             <Controller
-                                name="priority"
+                                name='priority'
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel>Priority</FieldLabel>
                                         <select
                                             {...field}
-                                            className="w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                                            className='w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm'
                                         >
                                             {PRIORITY_VALUES.map((priority) => (
                                                 <option
@@ -207,7 +206,7 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
                                             ))}
                                         </select>
                                         {fieldState.error && (
-                                            <FieldDescription className="text-red-500">
+                                            <FieldDescription className='text-red-500'>
                                                 {fieldState.error.message}
                                             </FieldDescription>
                                         )}
@@ -216,10 +215,10 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
                             />
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className='grid grid-cols-2 gap-4'>
                             {/* Due Date Field */}
                             <Controller
-                                name="dueDate"
+                                name='dueDate'
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
@@ -227,10 +226,10 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
                                         <DateTimePicker
                                             value={field.value}
                                             onChange={field.onChange}
-                                            placeholder="Select due date"
+                                            placeholder='Select due date'
                                         />
                                         {fieldState.error && (
-                                            <FieldDescription className="text-red-500">
+                                            <FieldDescription className='text-red-500'>
                                                 {fieldState.error.message}
                                             </FieldDescription>
                                         )}
@@ -240,7 +239,7 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
 
                             {/* Reminder Date Field */}
                             <Controller
-                                name="reminderDate"
+                                name='reminderDate'
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
@@ -248,10 +247,10 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
                                         <DateTimePicker
                                             value={field.value}
                                             onChange={field.onChange}
-                                            placeholder="Select reminder date"
+                                            placeholder='Select reminder date'
                                         />
                                         {fieldState.error && (
-                                            <FieldDescription className="text-red-500">
+                                            <FieldDescription className='text-red-500'>
                                                 {fieldState.error.message}
                                             </FieldDescription>
                                         )}
@@ -262,14 +261,14 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
 
                         {/* Tags Field */}
                         <Controller
-                            name="tags"
+                            name='tags'
                             control={form.control}
                             render={({ field, fieldState }) => (
                                 <Field data-invalid={fieldState.invalid}>
                                     <FieldLabel>Tags</FieldLabel>
                                     <Input
-                                        type="text"
-                                        placeholder="Type a tag and press Enter"
+                                        type='text'
+                                        placeholder='Type a tag and press Enter'
                                         value={tagInput}
                                         onChange={(e) =>
                                             setTagInput(e.target.value)
@@ -277,19 +276,19 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
                                         onKeyDown={handleAddTag}
                                     />
                                     {field.value && field.value.length > 0 && (
-                                        <div className="flex flex-wrap gap-2 mt-2">
+                                        <div className='flex flex-wrap gap-2 mt-2'>
                                             {field.value.map((tag) => (
                                                 <span
                                                     key={tag}
-                                                    className="inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-primary/10 text-primary"
+                                                    className='inline-flex items-center gap-1 px-2 py-1 text-xs rounded-md bg-primary/10 text-primary'
                                                 >
                                                     {tag}
                                                     <button
-                                                        type="button"
+                                                        type='button'
                                                         onClick={() =>
                                                             handleRemoveTag(tag)
                                                         }
-                                                        className="ml-1 hover:text-destructive"
+                                                        className='ml-1 hover:text-destructive'
                                                     >
                                                         ×
                                                     </button>
@@ -301,7 +300,7 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
                                         Press Enter to add a tag
                                     </FieldDescription>
                                     {fieldState.error && (
-                                        <FieldDescription className="text-red-500">
+                                        <FieldDescription className='text-red-500'>
                                             {fieldState.error.message}
                                         </FieldDescription>
                                     )}
@@ -309,10 +308,10 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
                             )}
                         />
 
-                        <div className="flex justify-end gap-2 pt-4">
+                        <div className='flex justify-end gap-2 pt-4'>
                             <Button
-                                type="button"
-                                variant="outline"
+                                type='button'
+                                variant='outline'
                                 onClick={() => {
                                     form.reset();
                                     setOpen(false);
@@ -320,7 +319,7 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
                             >
                                 Cancel
                             </Button>
-                            <Button type="submit">
+                            <Button type='submit'>
                                 {todo ? 'Update Task' : 'Create Task'}
                             </Button>
                         </div>

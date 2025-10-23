@@ -18,7 +18,8 @@
         "formatter": {
             "trailingCommas": "all",
             "quoteStyle": "single",
-            "semicolons": "always"
+            "semicolons": "always",
+            "jsxQuoteStyle": "single"
         }
     },
     "css": {
