@@ -1,6 +1,7 @@
 import { account, session, user, verification } from '@/db/schema/auth-schema';
 import {
     tagsRelations,
+    todoTagsRelations,
     todosRelations,
     userRelations,
 } from '@/db/schema/relations';
@@ -17,4 +18,5 @@ export const schema = {
     userRelations,
     todosRelations,
     tagsRelations,
+    todoTagsRelations,
 };

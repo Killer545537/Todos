@@ -1,11 +1,11 @@
 'use server';
 
-import { and, eq } from 'drizzle-orm';
+import { and, eq, desc } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { db } from '@/db/db';
 import { tags, todos, todoTags } from '@/db/schema/todos';
 import { getId } from '@/helpers/auth';
-import type { Todo } from '@/types/todos';
+import type { Todo, Tags } from '@/types/todos';
 
 type NewTodo = Todo & {
     tags?: string[];
@@ -77,4 +77,61 @@ export const createTodo = async ({
     }
 
     return { success: true, message: 'Todo created successfully' };
+};
+
+/**
+ * Get all todos for the current user with their tags.
+ */
+export const getTodos = async () => {
+    const id = await getId();
+    if (!id) {
+        redirect('/login');
+    }
+
+    const todosList = await db.query.todos.findMany({
+        columns: {
+            id: true,
+            title: true,
+            description: true,
+            status: true,
+            priority: true,
+            dueDate: true,
+            reminderDate: true,
+            completedAt: true,
+            createdAt: true,
+            updatedAt: true,
+        },
+        where: eq(todos.userId, id),
+        orderBy: [desc(todos.createdAt)],
+        with: {
+            todoTags: {
+                columns: {},
+                with: {
+                    tag: {
+                        columns: {
+                            name: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    const todosWithTags = todosList.map((todo) => ({
+        id: todo.id,
+        title: todo.title,
+        description: todo.description,
+        status: todo.status,
+        priority: todo.priority,
+        dueDate: todo.dueDate,
+        reminderDate: todo.reminderDate,
+        completedAt: todo.completedAt,
+        createdAt: todo.createdAt,
+        updatedAt: todo.updatedAt,
+        tags: todo.todoTags.map((tt) => ({
+            name: tt.tag.name,
+        })),
+    }));
+
+    return todosWithTags;
 };
