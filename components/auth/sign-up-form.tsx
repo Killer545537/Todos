@@ -9,14 +9,14 @@ import { z } from 'zod';
 import { signUpUser } from '@/actions/user';
 import { Input } from '@/components/ui/input';
 import { authClient } from '@/lib/auth-client';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import {
     Field,
     FieldDescription,
     FieldGroup,
     FieldLabel,
     FieldSeparator,
-} from '../ui/field';
+} from '@/components/ui/field';
 
 const formSchema = z
     .object({

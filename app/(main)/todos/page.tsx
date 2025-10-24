@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { getTodos } from '@/actions/todos';
 import TodoCard from '@/components/todos/todo-card';
 import TodoDialog from '@/components/todos/todo-dialog';
+import TodoFilter from '@/components/todos/todo-filter';
 
 export const metadata: Metadata = {
     title: 'Todos',
@@ -27,7 +28,7 @@ const TodosPage = async () => {
                     </div>
                     <TodoDialog todo={undefined} />
                 </div>
-
+                <TodoFilter />
                 <div className='grid gap-4'>
                     {todos.length === 0 ? (
                         <div className='text-center py-12'>
