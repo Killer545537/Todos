@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { getTodos } from '@/actions/todos';
-import TodosContainer from './todos-container';
+import TodoDialog from '@/components/todos/todo-dialog';
 
 export const metadata: Metadata = {
     title: 'Todos',
@@ -23,7 +23,7 @@ const TodosPage = async () => {
                             total
                         </p>
                     </div>
-                    <TodosContainer />
+                    <TodoDialog todo={undefined} />
                 </div>
             </div>
         </main>

@@ -41,7 +41,7 @@ const formSchema = z.object({
     tags: z.array(z.string()).optional(),
 });
 
-const TodoForm = ({ todo }: TodoFormProps) => {
+const TodoDialog = ({ todo }: TodoFormProps) => {
     const [open, setOpen] = useState(false);
     const [tagInput, setTagInput] = useState('');
 
@@ -333,4 +333,4 @@ const TodoForm = ({ todo }: TodoFormProps) => {
     );
 };
 
-export default TodoForm;
+export default TodoDialog;
