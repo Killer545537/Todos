@@ -24,7 +24,6 @@ import {
 
 type TodoFormProps = {
     todo?: TodoWithTags;
-    onSubmit: (data: z.infer<typeof formSchema>) => void;
 };
 
 const formSchema = z.object({
@@ -42,7 +41,7 @@ const formSchema = z.object({
     tags: z.array(z.string()).optional(),
 });
 
-const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
+const TodoForm = ({ todo }: TodoFormProps) => {
     const [open, setOpen] = useState(false);
     const [tagInput, setTagInput] = useState('');
 
@@ -63,7 +62,7 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
     });
 
     const handleFormSubmit = (data: z.infer<typeof formSchema>) => {
-        onSubmit(data);
+        console.log(data);
         form.reset();
         setOpen(false);
     };

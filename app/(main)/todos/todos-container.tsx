@@ -5,12 +5,7 @@ import TodoForm from '@/components/todos/todo-dialog';
 const TodosContainer = () => {
     return (
         <div className='flex'>
-            <TodoForm
-                todo={undefined}
-                onSubmit={(data) => {
-                    console.log(data);
-                }}
-            />
+            <TodoForm todo={undefined} />
         </div>
     );
 };
