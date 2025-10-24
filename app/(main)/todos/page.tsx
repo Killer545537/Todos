@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import { getTodos } from '@/actions/todos';
 import TodoDialog from '@/components/todos/todo-dialog';
+import { getTodos } from '@/actions/todos';
+import TodoCard from '@/components/todos/todo-card';
 
 export const metadata: Metadata = {
     title: 'Todos',
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 const TodosPage = async () => {
     const todos = await getTodos();
     const todoCount = todos.length;
+
     return (
         <main className='flex-1 p-8 overflow-auto'>
             <div className='max-w-6xl mx-auto space-y-6'>
@@ -24,6 +26,20 @@ const TodosPage = async () => {
                         </p>
                     </div>
                     <TodoDialog todo={undefined} />
+                </div>
+
+                <div className='grid gap-4'>
+                    {todos.length === 0 ? (
+                        <div className='text-center py-12'>
+                            <p className='text-muted-foreground'>
+                                No todos yet. Create your first one!
+                            </p>
+                        </div>
+                    ) : (
+                        todos.map((todo) => (
+                            <TodoCard key={todo.id} todo={todo} />
+                        ))
+                    )}
                 </div>
             </div>
         </main>

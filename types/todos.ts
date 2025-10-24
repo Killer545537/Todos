@@ -7,7 +7,7 @@ import {
 
 export type Todo = Omit<
     typeof todos.$inferSelect,
-    'userId' | 'id' | 'createdAt' | 'updatedAt'
+    'userId' | 'createdAt' | 'updatedAt'
 >;
 
 export type Tag = Omit<typeof tags.$inferSelect, 'userId' | 'id'>;
