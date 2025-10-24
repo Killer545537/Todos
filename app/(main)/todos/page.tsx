@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
-import TodoDialog from '@/components/todos/todo-dialog';
 import { getTodos } from '@/actions/todos';
 import TodoCard from '@/components/todos/todo-card';
+import TodoDialog from '@/components/todos/todo-dialog';
 
 export const metadata: Metadata = {
     title: 'Todos',

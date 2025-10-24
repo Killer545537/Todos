@@ -1,8 +1,8 @@
 'use client';
 
 import { CheckCircle2, Circle, Edit2, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { priorityColors, statusColors } from '@/helpers/colors';
 import { cn } from '@/lib/utils';
 import type { TodoWithTags } from '@/types/todos';
