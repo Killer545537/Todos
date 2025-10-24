@@ -10,6 +10,7 @@ import { DateTimePicker } from '@/components/ui/date-time-picker';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
@@ -98,6 +99,9 @@ const TodoForm = ({ todo, onSubmit }: TodoFormProps) => {
             </DialogTrigger>
             <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
                 <DialogTitle>{todo ? 'Edit Task' : 'Add New Task'}</DialogTitle>
+                <DialogDescription>
+                    {todo ? 'Edit existing todo item' : 'Add a new todo item'}
+                </DialogDescription>
                 <div className='flex flex-col gap-6'>
                     <form
                         onSubmit={form.handleSubmit(handleFormSubmit)}

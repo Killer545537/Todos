@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
@@ -48,6 +49,7 @@ const TagDialog = () => {
             </DialogTrigger>
             <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
                 <DialogTitle>Add New Tag</DialogTitle>
+                <DialogDescription>Add a new todo tag!</DialogDescription>
                 <div className='flex flex-col gap-6'>
                     <form
                         onSubmit={form.handleSubmit(handleFormSubmit)}

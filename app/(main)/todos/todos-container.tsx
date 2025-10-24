@@ -1,6 +1,6 @@
 'use client';
 
-import TodoForm from '@/components/todos/todo-form';
+import TodoForm from '@/components/todos/todo-dialog';
 
 const TodosContainer = () => {
     return (
