@@ -1,7 +1,11 @@
-'use client';
-
+import type { Metadata } from 'next';
 import TagDialog from '@/components/tags/tag-dialog';
 import TagCard from '@/components/tags/tags-card';
+
+export const metadata: Metadata = {
+    title: 'Tags',
+    description: 'Manage your tags',
+};
 
 const TagsPage = () => {
     return (

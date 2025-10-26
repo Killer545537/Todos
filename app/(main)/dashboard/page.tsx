@@ -1,3 +1,10 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Dashboard',
+    description: 'Your todos dashboard',
+};
+
 const DashboardPage = () => {
     return (
         <div className='p-6'>
