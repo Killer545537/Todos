@@ -39,7 +39,7 @@ export default function HeroSection() {
 
             <main className='overflow-hidden [--color-primary-foreground:var(--color-white)] [--color-primary:var(--color-green-600)]'>
                 <section>
-                    <div className='relative mx-auto max-w-6xl px-6 pb-20 pt-32 lg:pt-48'>
+                    <div className='relative mx-auto max-w-6xl px-24 pb-4 pt-32 lg:pt-24'>
                         <div className='relative z-10 mx-auto max-w-4xl text-center'>
                             <TextEffect
                                 preset='fade-in-blur'
@@ -55,7 +55,7 @@ export default function HeroSection() {
                                 speedSegment={0.3}
                                 delay={0.5}
                                 as='p'
-                                className='mx-auto mt-6 max-w-2xl text-pretty text-lg'
+                                className='mx-auto mt-3 max-w-2xl text-pretty text-base'
                             >
                                 Turn your plans into progress. Add tasks, set
                                 reminders, and never miss a deadline. Simple.
@@ -68,18 +68,18 @@ export default function HeroSection() {
                             >
                                 <div
                                     aria-hidden
-                                    className='bg-radial from-primary/50 dark:from-primary/25 relative mx-auto mt-32 max-w-2xl to-transparent to-55% text-left'
+                                    className='bg-radial from-primary/50 dark:from-primary/25 relative mx-auto mt-16 max-w-3xl to-transparent to-55% text-left'
                                 >
-                                    <div className='bg-background border-border/50 absolute inset-0 mx-auto w-80 -translate-x-3 -translate-y-12 rounded-[2rem] border p-2 [mask-image:linear-gradient(to_bottom,#000_50%,transparent_90%)] sm:-translate-x-6'>
-                                        <div className='relative h-96 overflow-hidden rounded-[1.5rem] border p-2 pb-12 before:absolute before:inset-0 before:bg-[repeating-linear-gradient(-45deg,var(--color-border),var(--color-border)_1px,transparent_1px,transparent_6px)] before:opacity-50'></div>
+                                    <div className='bg-background border-border/50 absolute inset-0 mx-auto w-[480px] -translate-x-3 -translate-y-12 rounded-[2rem] border p-2 [mask-image:linear-gradient(to_bottom,#000_50%,transparent_90%)] sm:-translate-x-6'>
+                                        <div className='relative h-[450px] overflow-hidden rounded-[1.5rem] border p-2 pb-12 before:absolute before:inset-0 before:bg-[repeating-linear-gradient(-45deg,var(--color-border),var(--color-border)_1px,transparent_1px,transparent_6px)] before:opacity-50'></div>
                                     </div>
-                                    <div className='bg-muted dark:bg-background/50 border-border/50 mx-auto w-80 translate-x-4 rounded-[2rem] border p-2 backdrop-blur-3xl [mask-image:linear-gradient(to_bottom,#000_50%,transparent_90%)] sm:translate-x-8'>
+                                    <div className='bg-muted dark:bg-background/50 border-border/50 mx-auto w-[480px] translate-x-4 rounded-[2rem] border p-2 backdrop-blur-3xl [mask-image:linear-gradient(to_bottom,#000_50%,transparent_90%)] sm:translate-x-8'>
                                         <div className='bg-background space-y-2 overflow-hidden rounded-[1.5rem] border p-2 shadow-xl dark:bg-white/5 dark:shadow-black dark:backdrop-blur-3xl'>
                                             <Image
-                                                src='/placeholder.svg'
+                                                src='/landing-image.png'
                                                 alt='App Preview'
-                                                width={20}
-                                                height={20}
+                                                width={480}
+                                                height={720}
                                             />
                                             <div className='bg-muted rounded-[1rem] p-4 pb-16 dark:bg-white/5'></div>
                                         </div>
