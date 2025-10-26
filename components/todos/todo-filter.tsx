@@ -1,7 +1,9 @@
 'use client';
 
+import { Loader2 } from 'lucide-react';
 import type { Route } from 'next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useOptimistic, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { PRIORITY_VALUES, STATUS_VALUES } from '@/types/todos';
@@ -10,38 +12,70 @@ const TodoFilter = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
+    const [isPending, startTransition] = useTransition();
 
     const selectedStatus = searchParams.get('status') || 'all';
     const selectedPriority = searchParams.get('priority') || 'all';
 
+    const [optimisticFilters, setOptimisticFilters] = useOptimistic(
+        { status: selectedStatus, priority: selectedPriority },
+        (state, { key, value }: { key: string; value: string }) => ({
+            ...state,
+            [key]: value,
+        }),
+    );
+
     const hasActiveFilters =
-        selectedStatus !== 'all' || selectedPriority !== 'all';
+        optimisticFilters.status !== 'all' ||
+        optimisticFilters.priority !== 'all';
 
     const updateFilter = (key: string, value: string) => {
-        const params = new URLSearchParams(searchParams.toString());
+        startTransition(() => {
+            setOptimisticFilters({ key, value });
 
-        if (value === 'all') {
-            params.delete(key);
-        } else {
-            params.set(key, value);
-        }
+            const params = new URLSearchParams(searchParams.toString());
 
-        const queryString = params.toString();
-        router.push(
-            (queryString ? `${pathname}?${queryString}` : pathname) as Route,
-        );
+            if (value === 'all') {
+                params.delete(key);
+            } else {
+                params.set(key, value);
+            }
+
+            const queryString = params.toString();
+            router.push(
+                (queryString
+                    ? `${pathname}?${queryString}`
+                    : pathname) as Route,
+                { scroll: false },
+            );
+        });
     };
 
     const resetFilters = () => {
-        router.push(pathname as Route);
+        startTransition(() => {
+            setOptimisticFilters({ key: 'status', value: 'all' });
+            setOptimisticFilters({ key: 'priority', value: 'all' });
+
+            router.push(pathname as Route, { scroll: false });
+        });
     };
 
     return (
-        <div className='space-y-4 p-4 border border-border rounded-lg bg-card w-50'>
+        <div className='space-y-4 p-4 border border-border rounded-lg bg-card w-50 relative'>
+            {isPending && (
+                <div className='absolute inset-0 bg-background/50 backdrop-blur-sm rounded-lg flex items-center justify-center z-10'>
+                    <Loader2 className='h-6 w-6 animate-spin text-primary' />
+                </div>
+            )}
             <div className='flex items-center justify-between'>
                 <h3 className='font-semibold text-foreground'>Filters</h3>
                 {hasActiveFilters && (
-                    <Button variant='ghost' size='sm' onClick={resetFilters}>
+                    <Button
+                        variant='ghost'
+                        size='sm'
+                        onClick={resetFilters}
+                        disabled={isPending}
+                    >
                         Reset
                     </Button>
                 )}
@@ -57,10 +91,11 @@ const TodoFilter = () => {
                             key={status}
                             variant='ghost'
                             onClick={() => updateFilter('status', status)}
+                            disabled={isPending}
                             className={cn(
-                                'w-full text-left px-3 py-2 rounded-lg text-sm transition-colors',
-                                status === selectedStatus
-                                    ? 'bg-primary text-primary-foreground'
+                                'w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-200',
+                                status === optimisticFilters.status
+                                    ? 'bg-primary text-primary-foreground shadow-sm'
                                     : 'hover:bg-muted text-foreground',
                             )}
                         >
@@ -81,10 +116,11 @@ const TodoFilter = () => {
                             key={priority}
                             variant='ghost'
                             onClick={() => updateFilter('priority', priority)}
+                            disabled={isPending}
                             className={cn(
-                                'w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-muted text-foreground',
-                                priority === selectedPriority
-                                    ? 'bg-primary text-primary-foreground'
+                                'w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-200',
+                                priority === optimisticFilters.priority
+                                    ? 'bg-primary text-primary-foreground shadow-sm'
                                     : 'hover:bg-muted text-foreground',
                             )}
                         >

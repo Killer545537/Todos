@@ -9,16 +9,18 @@ export const metadata: Metadata = {
     description: 'Add and manage your todos',
 };
 
-type SearchParams = {
+type SearchParams = Promise<{
     status?: string;
     priority?: string;
-};
+}>;
 
 const TodosPage = async ({ searchParams }: { searchParams: SearchParams }) => {
     const todos = await getTodos();
 
-    const selectedStatus = (await searchParams.status) || 'all';
-    const selectedPriority = (await searchParams.priority) || 'all';
+    // Await the entire searchParams object
+    const params = await searchParams;
+    const selectedStatus = params.status || 'all';
+    const selectedPriority = params.priority || 'all';
 
     // Filter todos based on selected status and priority
     const filteredTodos = todos.filter((todo) => {
