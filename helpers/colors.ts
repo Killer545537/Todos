@@ -9,5 +9,5 @@ export const statusColors = {
     pending: 'text-muted-foreground',
     in_progress: 'text-blue-600',
     completed: 'text-green-600 line-through',
-    archived: '',
+    archived: 'text-gray-400 dark:text-gray-500',
 } as const;

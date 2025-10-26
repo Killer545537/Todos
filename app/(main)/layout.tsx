@@ -1,5 +1,11 @@
 import type React from 'react';
 import Sidebar from '@/components/todos/sidebar';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Todo App',
+    description: 'A simple todo application with Next.js',
+};
 
 const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
     <div className='flex h-screen'>
