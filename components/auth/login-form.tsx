@@ -7,8 +7,6 @@ import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { loginUser } from '@/actions/user';
-import { Input } from '@/components/ui/input';
-import { authClient } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import {
     Field,
@@ -17,6 +15,8 @@ import {
     FieldLabel,
     FieldSeparator,
 } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { authClient } from '@/lib/auth-client';
 
 const formSchema = z.object({
     email: z.email({ message: 'Invalid email address' }),

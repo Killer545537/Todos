@@ -9,9 +9,28 @@ export const metadata: Metadata = {
     description: 'Add and manage your todos',
 };
 
-const TodosPage = async () => {
+type SearchParams = {
+    status?: string;
+    priority?: string;
+};
+
+const TodosPage = async ({ searchParams }: { searchParams: SearchParams }) => {
     const todos = await getTodos();
+
+    const selectedStatus = (await searchParams.status) || 'all';
+    const selectedPriority = (await searchParams.priority) || 'all';
+
+    // Filter todos based on selected status and priority
+    const filteredTodos = todos.filter((todo) => {
+        const statusMatch =
+            selectedStatus === 'all' || todo.status === selectedStatus;
+        const priorityMatch =
+            selectedPriority === 'all' || todo.priority === selectedPriority;
+        return statusMatch && priorityMatch;
+    });
+
     const todoCount = todos.length;
+    const filteredCount = filteredTodos.length;
 
     return (
         <main className='flex-1 p-8 overflow-auto'>
@@ -22,8 +41,8 @@ const TodosPage = async () => {
                             All Tasks
                         </h1>
                         <p className='text-muted-foreground mt-2'>
-                            {todoCount} {todoCount === 1 ? 'task' : 'tasks'}{' '}
-                            total
+                            {filteredCount} of {todoCount}{' '}
+                            {todoCount === 1 ? 'task' : 'tasks'}
                         </p>
                     </div>
                     <TodoDialog todo={undefined} />
@@ -36,8 +55,14 @@ const TodosPage = async () => {
                                 No todos yet. Create your first one!
                             </p>
                         </div>
+                    ) : filteredTodos.length === 0 ? (
+                        <div className='text-center py-12'>
+                            <p className='text-muted-foreground'>
+                                No todos match the selected filters.
+                            </p>
+                        </div>
                     ) : (
-                        todos.map((todo) => (
+                        filteredTodos.map((todo) => (
                             <TodoCard key={todo.id} todo={todo} />
                         ))
                     )}
