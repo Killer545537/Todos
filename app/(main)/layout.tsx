@@ -1,6 +1,6 @@
+import type { Metadata } from 'next';
 import type React from 'react';
 import Sidebar from '@/components/todos/sidebar';
-import { Metadata } from 'next';
 
 export const metadata: Metadata = {
     title: 'Todo App',

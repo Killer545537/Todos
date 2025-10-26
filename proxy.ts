@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server';
-import { getId } from './helpers/auth';
+import { getId } from '@/helpers/auth';
 
 export const proxy = async (request: NextRequest) => {
     const id = getId();
