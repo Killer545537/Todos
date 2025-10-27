@@ -8,13 +8,36 @@ export const metadata: Metadata = {
 };
 
 const TagsPage = () => {
+    const tags = [{ name: 'work', priority: 'high' as const }];
+
     return (
-        <div className='p-6'>
-            <h1 className='text-3xl font-bold mb-4'>Tags</h1>
-            <p className='text-muted-foreground'>Manage your todo tags here.</p>
-            <TagCard name='work' priority='high' />
-            <TagDialog />
-        </div>
+        <main className='flex-1 p-8 overflow-auto'>
+            <div className='max-w-6xl mx-auto space-y-6'>
+                <div className='flex items-center justify-between'>
+                    <h1 className='text-3xl font-bold text-foreground'>
+                        All Tags
+                    </h1>
+                    <TagDialog />
+                </div>
+                <div className='grid gap-4'>
+                    {tags.length === 0 ? (
+                        <div className='text-center py-12'>
+                            <p className='text-muted-foreground'>
+                                No tags yet. Create your first one!
+                            </p>
+                        </div>
+                    ) : (
+                        tags.map((tag) => (
+                            <TagCard
+                                key={tag.name}
+                                name={tag.name}
+                                priority={tag.priority}
+                            />
+                        ))
+                    )}
+                </div>
+            </div>
+        </main>
     );
 };
 
