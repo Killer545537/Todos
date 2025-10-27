@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import FooterSection from '@/components/landing/footer';
 import { HeroHeader } from '@/components/landing/header';
 import { LogoCloud } from '@/components/landing/logo-cloud';
 import { AnimatedGroup } from '@/components/ui/animated-group';
@@ -37,7 +38,7 @@ export default function HeroSection() {
         <>
             <HeroHeader />
 
-            <main className='overflow-hidden [--color-primary-foreground:var(--color-white)] [--color-primary:var(--color-green-600)]'>
+            <main className='pt-10 overflow-hidden [--color-primary-foreground:var(--color-white)] [--color-primary:var(--color-green-600)]'>
                 <section>
                     <div className='relative mx-auto max-w-6xl px-24 pb-4 pt-32 lg:pt-24'>
                         <div className='relative z-10 mx-auto max-w-4xl text-center'>
@@ -89,8 +90,11 @@ export default function HeroSection() {
                             </AnimatedGroup>
                         </div>
                     </div>
+
+                    <LogoCloud />
+
+                    <FooterSection />
                 </section>
-                <LogoCloud />
             </main>
         </>
     );
