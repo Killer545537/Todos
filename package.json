@@ -7,7 +7,7 @@
         "build": "next build --turbopack",
         "start": "next start",
         "lint": "biome check",
-        "format": "biome format --write",
+        "format": "biome check --write --unsafe",
         "drizzle:generate": "drizzle-kit generate",
         "drizzle:migrate": "drizzle-kit migrate",
         "drizzle:push": "drizzle-kit push",
