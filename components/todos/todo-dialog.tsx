@@ -2,9 +2,12 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
+import { createTodo } from '@/actions/todos';
 import { Button } from '@/components/ui/button';
 import { DateTimePicker } from '@/components/ui/date-time-picker';
 import {
@@ -42,6 +45,7 @@ const formSchema = z.object({
 });
 
 const TodoDialog = ({ todo }: TodoFormProps) => {
+    const router = useRouter();
     const [open, setOpen] = useState(false);
     const [tagInput, setTagInput] = useState('');
 
@@ -61,10 +65,21 @@ const TodoDialog = ({ todo }: TodoFormProps) => {
         },
     });
 
-    const handleFormSubmit = (data: z.infer<typeof formSchema>) => {
-        console.log(data);
-        form.reset();
-        setOpen(false);
+    const handleFormSubmit = async (data: z.infer<typeof formSchema>) => {
+        const { success, message } = await createTodo({
+            ...data,
+            dueDate: data.dueDate ?? null,
+            reminderDate: data.reminderDate ?? null,
+        });
+
+        if (success) {
+            toast.success(message || 'Todo created successfully!');
+            form.reset();
+            setOpen(false);
+            router.refresh();
+        } else {
+            toast.error(message || 'Failed to create todo');
+        }
     };
 
     const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {

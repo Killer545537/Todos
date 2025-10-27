@@ -7,7 +7,7 @@ import { tags, todos, todoTags } from '@/db/schema/todos';
 import { getId } from '@/helpers/auth';
 import type { Todo, TodoWithTags } from '@/types/todos';
 
-type NewTodo = Todo & {
+type NewTodo = Omit<Todo, 'id' | 'completedAt'> & {
     tags?: string[];
 };
 
