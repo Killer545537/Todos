@@ -3,6 +3,7 @@
 import { CheckCircle2, Circle, Edit2, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useTodoDialog } from '@/contexts/todo-dialog-context';
 import { priorityColors, statusColors } from '@/helpers/colors';
 import { cn } from '@/lib/utils';
 import type { TodoWithTags } from '@/types/todos';
@@ -12,9 +13,7 @@ interface TodoCardProps {
 }
 
 const TodoCard = ({ todo }: TodoCardProps) => {
-    const onEdit = (_todo: TodoWithTags) => {
-        console.log('edit');
-    };
+    const { openDialog } = useTodoDialog();
     const onDelete = (_id: string) => {
         console.log('delete');
     };
@@ -79,7 +78,7 @@ const TodoCard = ({ todo }: TodoCardProps) => {
                     <Button
                         variant='ghost'
                         size='sm'
-                        onClick={() => onEdit(todo)}
+                        onClick={() => openDialog(todo)}
                         className='h-8 w-8 p-0'
                     >
                         <Edit2 className='w-4 h-4' />

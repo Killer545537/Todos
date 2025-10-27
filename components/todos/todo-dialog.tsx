@@ -1,9 +1,8 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -15,7 +14,6 @@ import {
     DialogContent,
     DialogDescription,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -27,6 +25,8 @@ import {
 
 type TodoFormProps = {
     todo?: TodoWithTags;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
 };
 
 const formSchema = z.object({
@@ -44,9 +44,8 @@ const formSchema = z.object({
     tags: z.array(z.string()).optional(),
 });
 
-const TodoDialog = ({ todo }: TodoFormProps) => {
+const TodoDialog = ({ todo, open, onOpenChange }: TodoFormProps) => {
     const router = useRouter();
-    const [open, setOpen] = useState(false);
     const [tagInput, setTagInput] = useState('');
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -65,6 +64,23 @@ const TodoDialog = ({ todo }: TodoFormProps) => {
         },
     });
 
+    useEffect(() => {
+        if (open) {
+            form.reset({
+                title: todo?.title || '',
+                description: todo?.description || '',
+                status: todo?.status || 'pending',
+                priority: todo?.priority || 'medium',
+                dueDate: todo?.dueDate ? new Date(todo.dueDate) : undefined,
+                reminderDate: todo?.reminderDate
+                    ? new Date(todo.reminderDate)
+                    : undefined,
+                tags: todo?.tags?.map((tag) => tag.name) ?? [],
+            });
+            setTagInput('');
+        }
+    }, [open, todo, form]);
+
     const handleFormSubmit = async (data: z.infer<typeof formSchema>) => {
         const { success, message } = await createTodo({
             ...data,
@@ -75,7 +91,7 @@ const TodoDialog = ({ todo }: TodoFormProps) => {
         if (success) {
             toast.success(message || 'Todo created successfully!');
             form.reset();
-            setOpen(false);
+            onOpenChange(false);
             router.refresh();
         } else {
             toast.error(message || 'Failed to create todo');
@@ -105,12 +121,7 @@ const TodoDialog = ({ todo }: TodoFormProps) => {
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button className='gap-2'>
-                    <Plus className='w-4 h-4' /> Add Task
-                </Button>
-            </DialogTrigger>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className='max-w-2xl max-h-[90vh] overflow-y-auto'>
                 <DialogTitle>{todo ? 'Edit Task' : 'Add New Task'}</DialogTitle>
                 <DialogDescription>
@@ -332,7 +343,7 @@ const TodoDialog = ({ todo }: TodoFormProps) => {
                                 variant='outline'
                                 onClick={() => {
                                     form.reset();
-                                    setOpen(false);
+                                    onOpenChange(false);
                                 }}
                             >
                                 Cancel
