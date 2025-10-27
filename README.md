@@ -23,9 +23,13 @@ Manage tasks, organize priorities, and track progress — all with elegant UI an
 ## 💡 Features
 
 ✅ **Smart Todo Creation** — Add todos with optional due date, reminder, and multiple tags.
+
 ✅ **Dynamic Filtering** — Filter by tag, status, or priority.
+
 ✅ **Visual Analytics** — View distribution of todos by priority and completion.
+
 ✅ **User Auth Integration** — Secure sessions via **Better-Auth**.
+
 ✅ **Clean, Modern UI** — Built entirely with **ShadCN/UI** and **Lucide icons**.
 
 ---
