@@ -3,8 +3,9 @@
 import { Loader2 } from 'lucide-react';
 import type { Route } from 'next';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useOptimistic, useTransition } from 'react';
+import { useEffect, useOptimistic, useTransition } from 'react';
 import { Button } from '@/components/ui/button';
+import { useFilterLoading } from '@/contexts/filter-loading-context';
 import { cn } from '@/lib/utils';
 import { PRIORITY_VALUES, STATUS_VALUES } from '@/types/todos';
 
@@ -13,6 +14,7 @@ const TodoFilter = () => {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const [isPending, startTransition] = useTransition();
+    const { setIsLoading } = useFilterLoading();
 
     const selectedStatus = searchParams.get('status') || 'all';
     const selectedPriority = searchParams.get('priority') || 'all';
@@ -28,6 +30,10 @@ const TodoFilter = () => {
     const hasActiveFilters =
         optimisticFilters.status !== 'all' ||
         optimisticFilters.priority !== 'all';
+
+    useEffect(() => {
+        setIsLoading(isPending);
+    }, [isPending, setIsLoading]);
 
     const updateFilter = (key: string, value: string) => {
         startTransition(() => {

@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { getTodos } from '@/actions/todos';
-import TodoCard from '@/components/todos/todo-card';
 import TodoDialog from '@/components/todos/todo-dialog';
 import TodoFilter from '@/components/todos/todo-filter';
+import TodoList from '@/components/todos/todo-list';
 
 export const metadata: Metadata = {
     title: 'Todos',
@@ -17,12 +17,10 @@ type SearchParams = Promise<{
 const TodosPage = async ({ searchParams }: { searchParams: SearchParams }) => {
     const todos = await getTodos();
 
-    // Await the entire searchParams object
     const params = await searchParams;
     const selectedStatus = params.status || 'all';
     const selectedPriority = params.priority || 'all';
 
-    // Filter todos based on selected status and priority
     const filteredTodos = todos.filter((todo) => {
         const statusMatch =
             selectedStatus === 'all' || todo.status === selectedStatus;
@@ -55,27 +53,7 @@ const TodosPage = async ({ searchParams }: { searchParams: SearchParams }) => {
                         <TodoFilter />
                     </div>
 
-                    <div className='lg:col-span-3 space-y-4'>
-                        {todos.length === 0 ? (
-                            <div className='text-center py-12'>
-                                <p className='text-muted-foreground'>
-                                    No todos yet. Create your first one!
-                                </p>
-                            </div>
-                        ) : filteredTodos.length === 0 ? (
-                            <div className='text-center py-12'>
-                                <p className='text-muted-foreground'>
-                                    No todos match the selected filters.
-                                </p>
-                            </div>
-                        ) : (
-                            <div className='space-y-3'>
-                                {filteredTodos.map((todo) => (
-                                    <TodoCard key={todo.id} todo={todo} />
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    <TodoList todos={todos} filteredTodos={filteredTodos} />
                 </div>
             </div>
         </main>

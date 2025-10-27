@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import type React from 'react';
 import Sidebar from '@/components/todos/sidebar';
+import { FilterLoadingProvider } from '@/contexts/filter-loading-context';
 
 export const metadata: Metadata = {
     title: 'Todo App',
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 const Layout = ({ children }: Readonly<{ children: React.ReactNode }>) => (
     <div className='flex h-screen'>
         <Sidebar />
-        {children}
+        <FilterLoadingProvider>{children}</FilterLoadingProvider>
     </div>
 );
 
