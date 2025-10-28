@@ -3,7 +3,7 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
 import { Resend } from 'resend';
 import PasswordReset from '@/components/emails/password-reset';
-import EmailVerification from '@/components/emails/verification';
+import Welcome from '@/components/emails/welcome';
 import { db } from '@/db/db';
 
 const resend = new Resend(process.env.RESEND_API_KEY!);
@@ -17,7 +17,7 @@ export const auth = betterAuth({
         requireEmailVerification: false,
         sendResetPassword: async ({ user, url }) => {
             await resend.emails.send({
-                from: 'Todos <onboarding@reset.dev>',
+                from: 'Todos <onboarding@resend.dev>',
                 to: [user.email],
                 subject: 'Reset your password',
                 react: PasswordReset({ name: user.name, resetUrl: url }),
@@ -30,19 +30,19 @@ export const auth = betterAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         },
     },
-    emailVerification: {
-        sendVerificationEmail: async ({ user, url }) => {
-            await resend.emails.send({
-                from: 'Notely <onboarding@resend.dev>',
-                to: [user.email],
-                subject: 'Verify your email address',
-                react: EmailVerification({
-                    name: user.name,
-                    verificationUrl: url,
-                }),
-            });
+    databaseHooks: {
+        user: {
+            create: {
+                after: async (user) => {
+                    await resend.emails.send({
+                        from: 'Todos <welcome@resend.dev>',
+                        to: [user.email],
+                        subject: 'Welcome to Todos!',
+                        react: Welcome({ name: user.name }),
+                    });
+                },
+            },
         },
-        sendOnSignUp: true,
     },
     plugins: [nextCookies()],
 });
