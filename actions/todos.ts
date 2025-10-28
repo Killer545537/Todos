@@ -135,3 +135,87 @@ export const getTodos = async (): Promise<TodoWithTags[]> => {
 
     return todosWithTags;
 };
+
+export const editTodo = async (
+    todoId: string,
+    updates: Partial<Omit<Todo, 'id' | 'createdAt' | 'updatedAt'>> & {
+        tags?: string[];
+    },
+) => {
+    const userId = await getId();
+    if (!userId) {
+        redirect('/login');
+    }
+
+    const updateData: Partial<typeof todos.$inferInsert> = {};
+
+    if (updates.title !== undefined) {
+        updateData.title = updates.title;
+    }
+    if (updates.description !== undefined) {
+        updateData.description = updates.description;
+    }
+    if (updates.status !== undefined) {
+        updateData.status = updates.status;
+        updateData.completedAt =
+            updates.status === 'completed' ? new Date() : null;
+    }
+    if (updates.priority !== undefined) {
+        updateData.priority = updates.priority;
+    }
+    if (updates.dueDate !== undefined) {
+        updateData.dueDate = updates.dueDate ? new Date(updates.dueDate) : null;
+    }
+    if (updates.reminderDate !== undefined) {
+        updateData.reminderDate = updates.reminderDate
+            ? new Date(updates.reminderDate)
+            : null;
+    }
+
+    if (Object.keys(updateData).length > 0) {
+        const [updatedTodo] = await db
+            .update(todos)
+            .set(updateData)
+            .where(eq(todos.id, todoId))
+            .returning();
+
+        if (!updatedTodo) {
+            return { success: false, message: 'Failed to update todo' };
+        }
+    }
+
+    if (updates.tags !== undefined) {
+        await db.delete(todoTags).where(eq(todoTags.todoId, todoId));
+
+        for (const tagName of updates.tags) {
+            let [existingTag] = await db
+                .select()
+                .from(tags)
+                .where(and(eq(tags.userId, userId), eq(tags.name, tagName)))
+                .limit(1);
+
+            if (!existingTag) {
+                const [newTag] = await db
+                    .insert(tags)
+                    .values({ userId, name: tagName })
+                    .returning();
+
+                existingTag = newTag;
+            }
+
+            if (!existingTag) {
+                return {
+                    success: false,
+                    message: 'Failed to create or retrieve tag',
+                };
+            }
+
+            await db.insert(todoTags).values({
+                todoId,
+                tagId: existingTag.id,
+            });
+        }
+    }
+
+    return { success: true, message: 'Todo updated successfully' };
+};

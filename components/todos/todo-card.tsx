@@ -1,6 +1,10 @@
 'use client';
 
-import { CheckCircle2, Circle, Edit2, Trash2 } from 'lucide-react';
+import { CheckCircle2, Circle, Edit2, Loader2, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { editTodo } from '@/actions/todos';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTodoDialog } from '@/contexts/todo-dialog-context';
@@ -13,12 +17,37 @@ interface TodoCardProps {
 }
 
 const TodoCard = ({ todo }: TodoCardProps) => {
+    const router = useRouter();
     const { openDialog } = useTodoDialog();
+    const [isToggling, setIsToggling] = useState(false);
+
     const onDelete = (_id: string) => {
         console.log('delete');
     };
-    const onToggle = (_id: string) => {
-        console.log('toggle');
+
+    const onToggle = async (id: string) => {
+        if (isToggling) return;
+
+        setIsToggling(true);
+        try {
+            const newStatus =
+                todo.status === 'completed' ? 'pending' : 'completed';
+            const result = await editTodo(id, { status: newStatus });
+
+            if (result.success) {
+                toast.success(
+                    `Todo ${newStatus === 'completed' ? 'completed' : 'reopened'}`,
+                );
+                router.refresh();
+            } else {
+                toast.error(result.message || 'Failed to update todo');
+            }
+        } catch (error) {
+            toast.error('Failed to update todo');
+            console.error('Error toggling todo:', error);
+        } finally {
+            setIsToggling(false);
+        }
     };
 
     return (
@@ -27,9 +56,12 @@ const TodoCard = ({ todo }: TodoCardProps) => {
                 <button
                     type='button'
                     onClick={() => onToggle(todo.id)}
-                    className='mt-1 flex-shrink-0'
+                    disabled={isToggling}
+                    className='mt-1 flex-shrink-0 disabled:opacity-50'
                 >
-                    {todo.status === 'completed' ? (
+                    {isToggling ? (
+                        <Loader2 className='w-5 h-5 text-muted-foreground animate-spin' />
+                    ) : todo.status === 'completed' ? (
                         <CheckCircle2 className='w-5 h-5 text-green-600' />
                     ) : (
                         <Circle className='w-5 h-5 text-muted-foreground hover:text-foreground' />

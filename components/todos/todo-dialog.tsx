@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { createTodo } from '@/actions/todos';
+import { createTodo, editTodo } from '@/actions/todos';
 import { Button } from '@/components/ui/button';
 import { DateTimePicker } from '@/components/ui/date-time-picker';
 import {
@@ -82,19 +82,41 @@ const TodoDialog = ({ todo, open, onOpenChange }: TodoFormProps) => {
     }, [open, todo, form]);
 
     const handleFormSubmit = async (data: z.infer<typeof formSchema>) => {
-        const { success, message } = await createTodo({
-            ...data,
-            dueDate: data.dueDate ?? null,
-            reminderDate: data.reminderDate ?? null,
-        });
+        let result;
+
+        if (todo) {
+            // Edit existing todo
+            result = await editTodo(todo.id, {
+                ...data,
+                dueDate: data.dueDate ?? null,
+                reminderDate: data.reminderDate ?? null,
+            });
+        } else {
+            // Create new todo
+            result = await createTodo({
+                ...data,
+                dueDate: data.dueDate ?? null,
+                reminderDate: data.reminderDate ?? null,
+            });
+        }
+
+        const { success, message } = result;
 
         if (success) {
-            toast.success(message || 'Todo created successfully!');
+            toast.success(
+                message ||
+                    (todo
+                        ? 'Todo updated successfully!'
+                        : 'Todo created successfully!'),
+            );
             form.reset();
             onOpenChange(false);
             router.refresh();
         } else {
-            toast.error(message || 'Failed to create todo');
+            toast.error(
+                message ||
+                    (todo ? 'Failed to update todo' : 'Failed to create todo'),
+            );
         }
     };
 
