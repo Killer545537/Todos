@@ -28,7 +28,7 @@ const getOrCreateTag = async (userId: string, tagName: string) => {
                 .values({ userId, name: tagName })
                 .returning();
             existingTag = newTag;
-        } catch (error) {
+        } catch {
             // Handle race condition where tag was created between select and insert
             [existingTag] = await db
                 .select()

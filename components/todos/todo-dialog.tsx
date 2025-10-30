@@ -18,6 +18,13 @@ import {
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import {
     PRIORITY_VALUES,
     STATUS_VALUES,
     type TodoWithTags,
@@ -205,25 +212,33 @@ const TodoDialog = ({ todo, open, onOpenChange }: TodoFormProps) => {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel>Status</FieldLabel>
-                                        <select
-                                            {...field}
-                                            className='w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm'
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={field.onChange}
                                         >
-                                            {STATUS_VALUES.map((status) => (
-                                                <option
-                                                    key={status}
-                                                    value={status}
-                                                >
-                                                    {status
-                                                        .replace('_', ' ')
-                                                        .charAt(0)
-                                                        .toUpperCase() +
-                                                        status
+                                            <SelectTrigger className='w-full'>
+                                                <SelectValue placeholder='Select status' />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {STATUS_VALUES.map((status) => (
+                                                    <SelectItem
+                                                        key={status}
+                                                        value={status}
+                                                    >
+                                                        {status
                                                             .replace('_', ' ')
-                                                            .slice(1)}
-                                                </option>
-                                            ))}
-                                        </select>
+                                                            .charAt(0)
+                                                            .toUpperCase() +
+                                                            status
+                                                                .replace(
+                                                                    '_',
+                                                                    ' ',
+                                                                )
+                                                                .slice(1)}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
                                         {fieldState.error && (
                                             <FieldDescription className='text-red-500'>
                                                 {fieldState.error.message}
@@ -240,22 +255,31 @@ const TodoDialog = ({ todo, open, onOpenChange }: TodoFormProps) => {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel>Priority</FieldLabel>
-                                        <select
-                                            {...field}
-                                            className='w-full h-9 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm'
+                                        <Select
+                                            value={field.value}
+                                            onValueChange={field.onChange}
                                         >
-                                            {PRIORITY_VALUES.map((priority) => (
-                                                <option
-                                                    key={priority}
-                                                    value={priority}
-                                                >
-                                                    {priority
-                                                        .charAt(0)
-                                                        .toUpperCase() +
-                                                        priority.slice(1)}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            <SelectTrigger className='w-full'>
+                                                <SelectValue placeholder='Select priority' />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {PRIORITY_VALUES.map(
+                                                    (priority) => (
+                                                        <SelectItem
+                                                            key={priority}
+                                                            value={priority}
+                                                        >
+                                                            {priority
+                                                                .charAt(0)
+                                                                .toUpperCase() +
+                                                                priority.slice(
+                                                                    1,
+                                                                )}
+                                                        </SelectItem>
+                                                    ),
+                                                )}
+                                            </SelectContent>
+                                        </Select>
                                         {fieldState.error && (
                                             <FieldDescription className='text-red-500'>
                                                 {fieldState.error.message}

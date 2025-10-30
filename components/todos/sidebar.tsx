@@ -3,9 +3,9 @@
 import {
     BarChart3,
     CheckSquare2,
+    Copyright,
     type LucideIcon,
     Tag,
-    Copyright,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
