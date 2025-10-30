@@ -1,6 +1,12 @@
 'use client';
 
-import { BarChart3, CheckSquare2, type LucideIcon, Tag } from 'lucide-react';
+import {
+    BarChart3,
+    CheckSquare2,
+    type LucideIcon,
+    Tag,
+    Copyright,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -44,6 +50,12 @@ const Sidebar = () => {
                     );
                 })}
             </nav>
+
+            <div className='p-4 border-t border-border'>
+                <p className='text-xs text-muted-foreground flex items-center gap-1'>
+                    <Copyright className='w-4 h-4' /> 2025 Todos
+                </p>
+            </div>
         </aside>
     );
 };
