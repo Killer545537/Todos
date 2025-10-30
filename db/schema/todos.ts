@@ -4,6 +4,7 @@ import {
     primaryKey,
     text,
     timestamp,
+    unique,
     uuid,
 } from 'drizzle-orm/pg-core';
 import { user } from '@/db/schema/auth-schema';
@@ -45,13 +46,17 @@ export const todos = pgTable('todos', {
 });
 
 /// Basically a map storing unique tags with users
-export const tags = pgTable('tags', {
-    id: uuid().primaryKey().defaultRandom(),
-    userId: text()
-        .references(() => user.id, { onDelete: 'cascade' })
-        .notNull(),
-    name: text().notNull(),
-});
+export const tags = pgTable(
+    'tags',
+    {
+        id: uuid().primaryKey().defaultRandom(),
+        userId: text()
+            .references(() => user.id, { onDelete: 'cascade' })
+            .notNull(),
+        name: text().notNull(),
+    },
+    (table) => [unique('unique_user_tag').on(table.userId, table.name)],
+);
 
 export const todoTags = pgTable(
     'todo_tags',

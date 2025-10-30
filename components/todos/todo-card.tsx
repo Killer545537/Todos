@@ -4,7 +4,7 @@ import { CheckCircle2, Circle, Edit2, Loader2, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { editTodo } from '@/actions/todos';
+import { deleteTodo, editTodo } from '@/actions/todos';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useTodoDialog } from '@/contexts/todo-dialog-context';
@@ -20,9 +20,27 @@ const TodoCard = ({ todo }: TodoCardProps) => {
     const router = useRouter();
     const { openDialog } = useTodoDialog();
     const [isToggling, setIsToggling] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
-    const onDelete = (_id: string) => {
-        console.log('delete');
+    const onDelete = async (id: string) => {
+        if (isDeleting) return;
+
+        setIsDeleting(true);
+        try {
+            const result = await deleteTodo(id);
+
+            if (result.success) {
+                toast.success('Todo deleted successfully');
+                router.refresh();
+            } else {
+                toast.error(result.message || 'Failed to delete todo');
+            }
+        } catch (error) {
+            toast.error('Failed to delete todo');
+            console.error('Error deleting todo:', error);
+        } finally {
+            setIsDeleting(false);
+        }
     };
 
     const onToggle = async (id: string) => {
@@ -119,9 +137,14 @@ const TodoCard = ({ todo }: TodoCardProps) => {
                         variant='ghost'
                         size='sm'
                         onClick={() => onDelete(todo.id)}
-                        className='h-8 w-8 p-0 text-destructive hover:text-destructive'
+                        disabled={isDeleting}
+                        className='h-8 w-8 p-0 text-destructive hover:text-destructive disabled:opacity-50'
                     >
-                        <Trash2 className='w-4 h-4' />
+                        {isDeleting ? (
+                            <Loader2 className='w-4 h-4 animate-spin' />
+                        ) : (
+                            <Trash2 className='w-4 h-4' />
+                        )}
                     </Button>
                 </div>
             </div>

@@ -12,6 +12,63 @@ type NewTodo = Omit<Todo, 'id' | 'completedAt'> & {
 };
 
 /**
+ * Get or create a tag for a user.
+ */
+const getOrCreateTag = async (userId: string, tagName: string) => {
+    let [existingTag] = await db
+        .select()
+        .from(tags)
+        .where(and(eq(tags.userId, userId), eq(tags.name, tagName)))
+        .limit(1);
+
+    if (!existingTag) {
+        try {
+            const [newTag] = await db
+                .insert(tags)
+                .values({ userId, name: tagName })
+                .returning();
+            existingTag = newTag;
+        } catch (error) {
+            // Handle race condition where tag was created between select and insert
+            [existingTag] = await db
+                .select()
+                .from(tags)
+                .where(and(eq(tags.userId, userId), eq(tags.name, tagName)))
+                .limit(1);
+        }
+    }
+
+    return existingTag;
+};
+
+/**
+ * Associate tags with a todo.
+ */
+const associateTagsWithTodo = async (
+    todoId: string,
+    userId: string,
+    tagNames: string[],
+) => {
+    for (const tagName of tagNames) {
+        const tag = await getOrCreateTag(userId, tagName);
+
+        if (!tag) {
+            return {
+                success: false,
+                message: 'Failed to create or retrieve tag',
+            };
+        }
+
+        await db.insert(todoTags).values({
+            todoId,
+            tagId: tag.id,
+        });
+    }
+
+    return { success: true };
+};
+
+/**
  * Create a new todo item.
  */
 export const createTodo = async ({
@@ -46,33 +103,13 @@ export const createTodo = async ({
     }
 
     if (newTodoTags && newTodoTags.length > 0) {
-        for (const tagName of newTodoTags) {
-            let [existingTag] = await db
-                .select()
-                .from(tags)
-                .where(and(eq(tags.userId, id), eq(tags.name, tagName)))
-                .limit(1);
-
-            if (!existingTag) {
-                const [newTag] = await db
-                    .insert(tags)
-                    .values({ userId: id, name: tagName })
-                    .returning();
-
-                existingTag = newTag;
-            }
-
-            if (!existingTag) {
-                return {
-                    success: false,
-                    message: 'Failed to create or retrieve tag',
-                };
-            }
-
-            await db.insert(todoTags).values({
-                todoId: newTodo.id,
-                tagId: existingTag.id,
-            });
+        const tagResult = await associateTagsWithTodo(
+            newTodo.id,
+            id,
+            newTodoTags,
+        );
+        if (!tagResult.success) {
+            return tagResult;
         }
     }
 
@@ -136,6 +173,9 @@ export const getTodos = async (): Promise<TodoWithTags[]> => {
     return todosWithTags;
 };
 
+/**
+ * Edit an existing todo item.
+ */
 export const editTodo = async (
     todoId: string,
     updates: Partial<Omit<Todo, 'id' | 'createdAt' | 'updatedAt'>> & {
@@ -187,35 +227,69 @@ export const editTodo = async (
     if (updates.tags !== undefined) {
         await db.delete(todoTags).where(eq(todoTags.todoId, todoId));
 
-        for (const tagName of updates.tags) {
-            let [existingTag] = await db
-                .select()
-                .from(tags)
-                .where(and(eq(tags.userId, userId), eq(tags.name, tagName)))
-                .limit(1);
-
-            if (!existingTag) {
-                const [newTag] = await db
-                    .insert(tags)
-                    .values({ userId, name: tagName })
-                    .returning();
-
-                existingTag = newTag;
-            }
-
-            if (!existingTag) {
-                return {
-                    success: false,
-                    message: 'Failed to create or retrieve tag',
-                };
-            }
-
-            await db.insert(todoTags).values({
+        if (updates.tags.length > 0) {
+            const tagResult = await associateTagsWithTodo(
                 todoId,
-                tagId: existingTag.id,
-            });
+                userId,
+                updates.tags,
+            );
+            if (!tagResult.success) {
+                return tagResult;
+            }
         }
     }
 
     return { success: true, message: 'Todo updated successfully' };
+};
+
+/**
+ * Delete a todo item.
+ */
+export const deleteTodo = async (todoId: string) => {
+    const userId = await getId();
+    if (!userId) {
+        redirect('/login');
+    }
+
+    // Verify the todo belongs to the current user
+    const [todoToDelete] = await db
+        .select()
+        .from(todos)
+        .where(and(eq(todos.id, todoId), eq(todos.userId, userId)))
+        .limit(1);
+
+    if (!todoToDelete) {
+        return { success: false, message: 'Todo not found or access denied' };
+    }
+
+    // Get the tag IDs associated with this todo before deletion
+    const associatedTags = await db
+        .select({ tagId: todoTags.tagId })
+        .from(todoTags)
+        .where(eq(todoTags.todoId, todoId));
+
+    // Delete the todo (this will cascade delete todoTags entries)
+    const [deletedTodo] = await db
+        .delete(todos)
+        .where(eq(todos.id, todoId))
+        .returning();
+
+    if (!deletedTodo) {
+        return { success: false, message: 'Failed to delete todo' };
+    }
+
+    // Clean up orphaned tags (tags that are no longer associated with any todos)
+    for (const { tagId } of associatedTags) {
+        const remainingAssociations = await db
+            .select()
+            .from(todoTags)
+            .where(eq(todoTags.tagId, tagId))
+            .limit(1);
+
+        if (remainingAssociations.length === 0) {
+            await db.delete(tags).where(eq(tags.id, tagId));
+        }
+    }
+
+    return { success: true, message: 'Todo deleted successfully' };
 };
