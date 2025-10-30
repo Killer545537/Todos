@@ -1,8 +1,8 @@
 'use server';
 
 import { and, desc, eq } from 'drizzle-orm';
-import { redirect } from 'next/navigation';
 import { cacheLife } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { db } from '@/db/db';
 import { tags, todos, todoTags } from '@/db/schema/todos';
 import { getId } from '@/helpers/auth';
@@ -150,6 +150,7 @@ export const getTodos = async (): Promise<TodoWithTags[]> => {
                 with: {
                     tag: {
                         columns: {
+                            id: true,
                             name: true,
                         },
                     },
@@ -170,6 +171,7 @@ export const getTodos = async (): Promise<TodoWithTags[]> => {
         createdAt: todo.createdAt,
         updatedAt: todo.updatedAt,
         tags: todo.todoTags.map((tt) => ({
+            id: tt.tag.id,
             name: tt.tag.name,
         })),
     }));

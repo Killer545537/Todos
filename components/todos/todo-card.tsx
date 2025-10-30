@@ -1,12 +1,14 @@
 'use client';
 
-import { CheckCircle2, Circle, Edit2, Loader2, Trash2 } from 'lucide-react';
+import { CheckCircle2, Circle, Edit2, Loader2, Trash2, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { deleteTag } from '@/actions/tags';
 import { deleteTodo, editTodo } from '@/actions/todos';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ConfirmationDialog } from '@/components/ui/confirmation-dialog';
 import { useTodoDialog } from '@/contexts/todo-dialog-context';
 import { priorityColors, statusColors } from '@/helpers/colors';
 import { cn } from '@/lib/utils';
@@ -21,6 +23,11 @@ const TodoCard = ({ todo }: TodoCardProps) => {
     const { openDialog } = useTodoDialog();
     const [isToggling, setIsToggling] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [deletingTagId, setDeletingTagId] = useState<string | null>(null);
+    const [tagToDelete, setTagToDelete] = useState<{
+        id: string;
+        name: string;
+    } | null>(null);
 
     const onDelete = async (id: string) => {
         if (isDeleting) return;
@@ -65,6 +72,32 @@ const TodoCard = ({ todo }: TodoCardProps) => {
             console.error('Error toggling todo:', error);
         } finally {
             setIsToggling(false);
+        }
+    };
+
+    const handleDeleteTagClick = (tag: { id: string; name: string }) => {
+        setTagToDelete(tag);
+    };
+
+    const onConfirmDeleteTag = async () => {
+        if (!tagToDelete || deletingTagId) return;
+
+        setDeletingTagId(tagToDelete.id);
+        try {
+            const result = await deleteTag(tagToDelete.id);
+
+            if (result.success) {
+                toast.success('Tag deleted successfully');
+                setTagToDelete(null);
+                router.refresh();
+            } else {
+                toast.error(result.message || 'Failed to delete tag');
+            }
+        } catch (error) {
+            toast.error('Failed to delete tag');
+            console.error('Error deleting tag:', error);
+        } finally {
+            setDeletingTagId(null);
         }
     };
 
@@ -116,9 +149,24 @@ const TodoCard = ({ todo }: TodoCardProps) => {
                             <Badge
                                 key={tag.name}
                                 variant='secondary'
-                                className='text-xs'
+                                className='text-xs group relative pr-7'
                             >
                                 {tag.name}
+                                <button
+                                    type='button'
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteTagClick(tag);
+                                    }}
+                                    disabled={deletingTagId === tag.id}
+                                    className='absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity h-3 w-3 rounded-sm hover:bg-destructive/20 flex items-center justify-center disabled:opacity-50'
+                                >
+                                    {deletingTagId === tag.id ? (
+                                        <Loader2 className='w-2 h-2 animate-spin' />
+                                    ) : (
+                                        <X className='w-2 h-2 text-muted-foreground hover:text-destructive' />
+                                    )}
+                                </button>
                             </Badge>
                         ))}
                     </div>
@@ -148,6 +196,18 @@ const TodoCard = ({ todo }: TodoCardProps) => {
                     </Button>
                 </div>
             </div>
+
+            <ConfirmationDialog
+                open={!!tagToDelete}
+                onOpenChange={() => setTagToDelete(null)}
+                title={`Remove tag "${tagToDelete?.name}"?`}
+                description='This will remove the tag from this todo. The tag itself will remain available for other todos.'
+                confirmText='Remove Tag'
+                cancelText='Cancel'
+                onConfirm={onConfirmDeleteTag}
+                isLoading={!!deletingTagId}
+                variant='destructive'
+            />
         </div>
     );
 };

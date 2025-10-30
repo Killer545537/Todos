@@ -10,9 +10,11 @@ export type Todo = Omit<
     'userId' | 'createdAt' | 'updatedAt'
 >;
 
-export type Tag = Omit<typeof tags.$inferSelect, 'userId' | 'id'>;
+export type Tag = Omit<typeof tags.$inferSelect, 'userId'>;
 
 export type Tags = Array<Tag>;
+
+export type TagWithUsage = Tag & { usageCount: number };
 
 export const STATUS_VALUES = statusEnum.enumValues;
 

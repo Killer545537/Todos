@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 import LoginForm from '@/components/auth/login-form';
 import { getId } from '@/helpers/auth';
 
