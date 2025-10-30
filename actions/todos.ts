@@ -2,6 +2,7 @@
 
 import { and, desc, eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
+import { cacheLife } from 'next/cache';
 import { db } from '@/db/db';
 import { tags, todos, todoTags } from '@/db/schema/todos';
 import { getId } from '@/helpers/auth';
@@ -120,6 +121,9 @@ export const createTodo = async ({
  * Get all todos for the current user with their tags.
  */
 export const getTodos = async (): Promise<TodoWithTags[]> => {
+    'use cache: private';
+    cacheLife('minutes');
+
     const id = await getId();
     if (!id) {
         redirect('/login');
