@@ -59,6 +59,7 @@ const TodosClient = ({ todos }: TodosClientProps) => {
                                 onStatusChange={setSelectedStatus}
                                 onPriorityChange={setSelectedPriority}
                                 onReset={resetFilters}
+                                disabled={false}
                             />
                         </div>
 
