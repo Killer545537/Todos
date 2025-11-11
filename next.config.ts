@@ -8,6 +8,14 @@ const nextConfig: NextConfig = {
         typedEnv: true,
         browserDebugInfoInTerminal: true,
     },
+    webpack: (config, { isServer }) => {
+        // Ignore extension folder during builds
+        config.watchOptions = {
+            ...config.watchOptions,
+            ignored: ['**/extension/**', '**/node_modules/**'],
+        };
+        return config;
+    },
 };
 
 export default nextConfig;
